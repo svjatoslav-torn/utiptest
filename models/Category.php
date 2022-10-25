@@ -14,6 +14,10 @@ use Yii;
  */
 class Category extends \yii\db\ActiveRecord
 {
+    public function fields()
+    {
+        return ['id', 'name'];
+    }
     /**
      * {@inheritdoc}
      */
@@ -28,7 +32,7 @@ class Category extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name'], 'required', 'message' => 'Отсутствует поле Название'],
             [['name'], 'string', 'max' => 50],
         ];
     }

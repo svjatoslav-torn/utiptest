@@ -23,7 +23,6 @@ class AuthController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'register' => ['post'],
                     'login' => ['post'],
                 ],
@@ -73,6 +72,7 @@ class AuthController extends Controller
             return [
                 'token' => $token->token,
                 'expired' => date(DATE_RFC3339, $token->expired_at),
+                'user_id' => $loginForm->getUser()->id,
             ];
         }else{
             return $loginForm; // выкинет ерорс если не удача

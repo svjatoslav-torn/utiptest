@@ -38,15 +38,15 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['author_id', 'category_id'], 'required'],
-            [['author_id', 'category_id', 'status'], 'integer'],
+            ['category_id', 'required', 'message' => 'Вы не передали идентификатор категории'],
+            [['author_id', 'category_id'], 'integer'],
+            ['status', 'boolean'],
             [['body'], 'string'],
             [['created_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
             [['img_path'], 'string', 'max' => 100],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
-            // [['id'], 'exist', 'skipOnError' => true, 'targetClass' => PostsTags::class, 'targetAttribute' => ['id' => 'post_id']],
         ];
     }
 
@@ -57,17 +57,22 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'author_id' => 'Author ID',
-            'category_id' => 'Category ID',
-            'title' => 'Title',
-            'body' => 'Body',
-            'img_path' => 'Img Path',
-            'status' => 'Status',
-            'created_at' => 'Created At',
+            'author_id' => 'Автор',
+            'category_id' => 'Категория',
+            'title' => 'Заголовок',
+            'body' => 'Контент',
+            'img_path' => 'Путь до изображения',
+            'status' => 'Статус',
+            'created_at' => 'Дата создания',
         ];
     }
 
-    /**
+    public static function findPost($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
+
+    /** 
      * Gets query for [[Author]].
      *
      * @return \yii\db\ActiveQuery

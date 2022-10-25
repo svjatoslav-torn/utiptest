@@ -21,8 +21,8 @@ class m221024_153229_create_foreign_keys_for_table_tags extends Migration
      */
     public function safeDown()
     {
-        $this->dropIndex('idx-posts_tag-tag_id', 'posts_tags');
         $this->dropForeignKey('fk-tags-id-posts_tags-tag_id', 'posts_tags');
+        $this->dropIndex('idx-posts_tag-tag_id', 'posts_tags');
     }
 
     /*
