@@ -1,5 +1,8 @@
 <?php
 
+use app\models\Post;
+use yii\web\JsonParser;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -13,15 +16,25 @@ $config = [
     ],
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+            'parsers' => [
+                'application/json' => JsonParser::class,
+            ],
             'cookieValidationKey' => 'Xp48lQm-JlOymG9MxnLIi7KMMcphlUwUsdsaa333esa-daPoh',
+        ],
+        'response' => [
+            'formatters' => [
+                \yii\web\Response::FORMAT_JSON => [
+                    'class' => 'yii\web\JsonResponseFormatter',
+                    'prettyPrint' => YII_DEBUG, // use "pretty" output in debug mode
+                    'encodeOptions' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+                ],
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
             'enableSession' => false,
         ],
         'errorHandler' => [
@@ -43,14 +56,14 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/v1/post'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/v1/category'],
             ],
         ],
-        */
     ],
     'params' => $params,
 ];

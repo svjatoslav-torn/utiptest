@@ -1,9 +1,11 @@
 <?php
 
-namespace app\models;
+namespace app\models\forms;
 
+use app\models\Token;
 use Yii;
 use yii\base\Model;
+use app\models\User;
 
 /**
  * LoginForm is the model behind the login form.
@@ -13,9 +15,8 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
-    public $username;
+    public $email;
     public $password;
-    public $rememberMe = true;
 
     private $_user = false;
 
@@ -26,11 +27,9 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
+            ['email', 'required', 'message' => 'Пожалуйста отправьте свой Email'],
+            ['password', 'required', 'message' => 'Пожалуйста отправьте пароль'],
+            ['email', 'email', 'message' => 'Введите нормальную валидную почту'],
             ['password', 'validatePassword'],
         ];
     }
@@ -47,8 +46,9 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
+            //Проверять хешированный пароль - готово
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, 'Не верный логин или пароль. Проверьте учетные данные!');
             }
         }
     }
@@ -57,23 +57,24 @@ class LoginForm extends Model
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
-    public function login()
+    public function auth()
     {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
-        }
-        return false;
+        $token = new Token();
+        $token->user_id = $this->getUser()->id;
+        $token->generateToken( time() + 3600 * 24 );
+
+        return $token->save() ? $token : null;
     }
 
     /**
-     * Finds user by [[username]]
+     * Finds user by [[email]]
      *
      * @return User|null
      */
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByemail($this->email);
         }
 
         return $this->_user;
