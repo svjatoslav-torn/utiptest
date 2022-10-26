@@ -75,12 +75,13 @@ class PostController extends ActiveController
      */
     public function actionPostCache()
     {
-        if($postList = \Yii::$app->cache->get('cache_all_postList')){
-            $post = Post::find()->asArray()->all();
-            \Yii::$app->cache->set('cache_all_postList', $postList, 60 * 60 * 2); //Кэш запроса
+        if(! $postList = \Yii::$app->cache->get('cache_all_postListeg')){
+            $postList = Post::find()->asArray()->all();
+            \Yii::$app->cache->set('cache_all_postListeg', $postList, 60 * 60 * 2); //Кэш запроса
         }
+        
         Yii::$app->response->statusCode = 200;
-        return $post;
+        return $postList;
     }
 
     /**
