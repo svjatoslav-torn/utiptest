@@ -3,8 +3,10 @@
 namespace app\models\resource;
 
 use Yii;
-use app\models\Comment;
+use app\models\resource\Comment;
 use app\models\resource\Category;
+use app\models\resource\User;
+use app\models\Tag;
 use app\models\Post as ModelsPost;
 
 class Post extends ModelsPost
@@ -23,7 +25,7 @@ class Post extends ModelsPost
 
     public function extraFields()
     {
-        return ['comments', 'category'];
+        return ['comments', 'category', 'author', 'tags'];
     }
 
     public function getComments()
@@ -35,4 +37,21 @@ class Post extends ModelsPost
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
+
+    public function getAuthor()
+    {
+        return $this->hasOne(User::class, ['id' => 'author_id']);
+    }
+
+    public function getTags()
+    {
+        return $this->hasMany(Tag::class, ['id' => 'tag_id'])->viaTable('posts_tags', ['post_id' => 'id']);
+    }
+
+    // public function getTags()
+    // {
+    //     return $this->hasMany(Tag::class, ['id' => 'post_id'])
+    //         ->viaTable('posts_tags', ['tag_id' => 'id']);
+    // }
+
 }

@@ -28,7 +28,7 @@ class CreateUserController extends Controller
      * @param string $message the message to be echoed.
      * @return int Exit code
      */
-    public function actionIndex(?string $role)
+    public function actionIndex(?string $role = null)
     {
         $name = $this->prompt('Введите Имя:', ['required' => true]);
         $email = $this->prompt('Введите Email:', ['required' => true]);

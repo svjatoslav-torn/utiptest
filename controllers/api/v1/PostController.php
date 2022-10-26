@@ -72,7 +72,7 @@ class PostController extends ActiveController
     }
 
     public function actionCreate()
-    {
+    {        
         $formPost = $this->workWithForm();
 
         if(is_array($formPost)){
@@ -86,6 +86,13 @@ class PostController extends ActiveController
         // Model validation and save()
         if($modelPost->validate()){
             if($modelPost->save()){
+                //Не понял как сохранять в связанную таблицу. Привет велосипед)
+                if(count($tags = explode('|', $formPost->tags)) > 0){
+                    for ($i=0; $i < count($tags); $i++) { 
+                        \Yii::$app->db->createCommand("INSERT INTO `posts_tags` (`post_id`, `tag_id`) VALUES ('{$modelPost->id}', '{$tags[$i]}')")
+                            ->queryAll();
+                    }
+                }
                 // save success - return id post
                 Yii::$app->response->statusCode = 201;
                 return [
@@ -108,6 +115,11 @@ class PostController extends ActiveController
 
     public function actionUpdate(int $id)
     {
+        // Пишем в лог бодипарамс при попытке апдейта Поста на дев окружении
+        if(YII_ENV !== 'prod'){
+            Yii::info(Yii::$app->request->bodyParams, 'dev_updatePost_log');
+        }
+
         $modelPost = Post::findPost($id);
 
         $formPost = $this->workWithForm();

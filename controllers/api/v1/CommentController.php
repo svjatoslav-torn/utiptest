@@ -1,13 +1,14 @@
 <?php
 namespace app\controllers\api\v1;
 
-use app\models\resource\Category;
+use app\models\resource\Comment;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
+use yii\filters\AccessControl;
 
-class CategoryController extends ActiveController
+class CommentController extends ActiveController
 {    
-    public $modelClass = Category::class;
+    public $modelClass = Comment::class;
 
     public function behaviors()
     {
@@ -22,12 +23,13 @@ class CategoryController extends ActiveController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'create', 'update'],
                         'roles' => ['user'],
                     ],
+                    // Удалять коменты может только админ
                     [
                         'allow' => true,
-                        'actions' => ['create', 'update', 'delete'],
+                        'actions' => ['delete'],
                         'roles' => ['admin'],
                     ],
                 ],
@@ -39,7 +41,6 @@ class CategoryController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-
         unset($actions['options']);
         return $actions;
     }

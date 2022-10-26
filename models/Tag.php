@@ -23,6 +23,12 @@ class Tag extends \yii\db\ActiveRecord
         return 'tags';
     }
 
+    public function extraFields()
+    {
+        return ['posts'];
+    }
+
+
     /**
      * {@inheritdoc}
      */
@@ -52,7 +58,7 @@ class Tag extends \yii\db\ActiveRecord
      */
     public function getPosts()
     {
-        return $this->hasMany(Post::class, ['id' => 'tag_id'])
-            ->viaTable('posts_tags', ['post_id' => 'id']);
+        return $this->hasMany(Post::class, ['id' => 'post_id'])
+            ->viaTable('posts_tags', ['tag_id' => 'id']);
     }
 }

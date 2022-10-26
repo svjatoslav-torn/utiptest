@@ -46,6 +46,6 @@ class RbacController extends Controller
         $auth->addChild($admin, $user);
         $auth->addChild($admin, $manageContent);
  
-        $this->stdout('Done!' . PHP_EOL);
+        $this->stdout('Отлично! Следующая команда  php yii rbac' . PHP_EOL);
     }
 }

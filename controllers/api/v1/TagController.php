@@ -1,13 +1,14 @@
 <?php
 namespace app\controllers\api\v1;
 
-use app\models\resource\Category;
+use app\models\Tag;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
+use yii\filters\AccessControl;
 
-class CategoryController extends ActiveController
+class TagController extends ActiveController
 {    
-    public $modelClass = Category::class;
+    public $modelClass = Tag::class;
 
     public function behaviors()
     {

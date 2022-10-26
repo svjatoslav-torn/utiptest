@@ -56,6 +56,12 @@ $config = [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\FileTarget', 
+                    'categories' => ['dev_updatePost_log'], 
+                    'logFile' => '@runtime/logs/development_update-post.log', 
+                    'logVars' => []
+                ],
             ],
         ],
         'db' => $db,
@@ -65,6 +71,8 @@ $config = [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/v1/post'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/v1/category'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/v1/comment'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/v1/tag'],
             ],
         ],
     ],

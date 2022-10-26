@@ -8,7 +8,9 @@
 namespace app\commands;
 
 use app\models\resource\Category;
+use app\models\resource\Comment;
 use app\models\resource\Post;
+use app\models\Tag;
 use app\models\User;
 use yii\console\Controller;
 use yii\console\ExitCode;
@@ -27,7 +29,30 @@ class SeederController extends Controller
     {
         $this->actionUsers();
         $this->actionCategories();
+        $this->actionTags();
         $this->actionPosts();
+        $this->actionComments();
+
+        echo PHP_EOL;
+        echo PHP_EOL;
+        echo '/////   СПРАВКА    /////';
+        echo PHP_EOL;
+        echo PHP_EOL;
+        echo 'php yii create-user  -  создаст обычного пользователя';
+        echo PHP_EOL;
+        echo 'php yii create-user admin  -  создаст Админа';
+        echo PHP_EOL;
+        echo PHP_EOL;
+        echo 'http://hostname/auth/register  -  доступна регистрация обычного пользователя. Поля: string $name, string $email, string $password';
+        echo PHP_EOL;
+        echo 'http://hostname/authlogin  -  получение Bearer токена. Поля: string $email, string $password';
+        echo PHP_EOL;
+        echo PHP_EOL;
+        echo 'php yii roles/revoke  -  удалить роль у юзера';
+        echo PHP_EOL;
+        echo 'php yii roles/assign  -  добавить роль у юзера';
+        echo PHP_EOL;
+        echo PHP_EOL;
     }
 
     /**
@@ -107,6 +132,54 @@ class SeederController extends Controller
         }
 
         echo 'В таблице "Посты" успешно создано '.$count.' записей';
+        echo PHP_EOL;
+    }
+
+    /**
+     * Посев комментариев к постам, по умолчанию 100шт если не задано иное
+     * @param string $message the message to be echoed.
+     * @return string
+     */
+    public function actionComments(int $count = 100)
+    {
+        $faker = \Faker\Factory::create();
+
+        $posts = Post::find()->limit(10)->asArray()->all();
+        $users = User::find()->limit(4)->asArray()->all();
+        
+        for ( $i = 0; $i < $count; $i++ )
+        {
+            $comment = new Comment();
+            $comment->setIsNewRecord(true);
+
+            $comment->body = $faker->paragraph(5);
+            $comment->user_id = $users[array_rand($users)]['id'];
+            $comment->post_id = $posts[array_rand($posts)]['id'];
+            $comment->save();           
+        }
+
+        echo 'В таблице "Комментарии" успешно создано '.$count.' записей';
+        echo PHP_EOL;
+    }
+
+    /**
+     * Посев тегов к постам, по умолчанию 10шт если не задано иное
+     * @param string $message the message to be echoed.
+     * @return string
+     */
+    public function actionTags(int $count = 10)
+    {
+        $faker = \Faker\Factory::create();
+        
+        for ( $i = 0; $i < $count; $i++ )
+        {
+            $tag = new Tag();
+            $tag->setIsNewRecord(true);
+            $tag->name = $faker->word();
+            $tag->save();           
+        }
+
+        echo 'В таблице "Тэги" успешно создано '.$count.' записей';
         echo PHP_EOL;
     }
 }

@@ -23,6 +23,7 @@ class PostForm extends Model
     public $status = 0;
     public $img_base64 = null;
     public $category_id;
+    public $tags = '';
 
 
     /**
@@ -37,30 +38,13 @@ class PostForm extends Model
             ['title', 'string', 'max' => 255],
             ['status', 'boolean'],
             ['img_base64', 'string'],
+            ['tags', 'string'],
         ];
     }
 
-    /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
-     */
-    // public function validatePassword($attribute, $params)
-    // {
-    //     if (!$this->hasErrors()) {
-    //         $user = $this->getUser();
-
-    //         //Проверять хешированный пароль - готово
-    //         if (!$user || !$user->validatePassword($this->password)) {
-    //             $this->addError($attribute, 'Не верный логин или пароль. Проверьте учетные данные!');
-    //         }
-    //     }
-    // }
-
     public function cookingBeforeSave(Post $modelPost = null)
     {
+        // var_dump($this->tags);die;
         $modelPost = $modelPost ?? new Post();
 
         $modelPost->title = $this->title;
