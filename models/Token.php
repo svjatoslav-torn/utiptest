@@ -22,7 +22,7 @@ class Token extends \yii\db\ActiveRecord
     public function generateToken($expire)
     {
         $this->expired_at = $expire;
-        $this->token = Yii::$app->security->generateRandomString();
+        $this->token = Yii::$app->security->generateRandomString(40);
     }
 
 

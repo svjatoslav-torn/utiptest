@@ -18,16 +18,13 @@ use Yii;
  */
 class Comment extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'comments';
     }
 
     /**
-     * {@inheritdoc}
+     * Правила валидации
      */
     public function rules()
     {
@@ -42,7 +39,7 @@ class Comment extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * Именование атрибутов
      */
     public function attributeLabels()
     {
@@ -56,7 +53,7 @@ class Comment extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Post]].
+     * Получить пост с комментов
      *
      * @return \yii\db\ActiveQuery
      */
@@ -66,7 +63,7 @@ class Comment extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[User]].
+     * Получить юзера
      *
      * @return \yii\db\ActiveQuery
      */

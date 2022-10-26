@@ -3,20 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
 use yii\rest\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\forms\LoginForm;
 use app\models\forms\RegisterForm;
-use app\models\User;
-use app\models\Token;
 
 class AuthController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -68,7 +62,6 @@ class AuthController extends Controller
         }
 
         if($token = $loginForm->auth()){
-            // var_dump($token);die;
             return [
                 'token' => $token->token,
                 'expired' => date(DATE_RFC3339, $token->expired_at),

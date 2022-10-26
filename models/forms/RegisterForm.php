@@ -7,20 +7,13 @@ use Yii;
 use yii\base\Model;
 
 /**
- * RegisterForm.
- *
- * @property-read User|null $user
- *
+ * Форма для данных при регистрации
  */
 class RegisterForm extends Model
 {
     public $name;
     public $email;
     public $password;
-
-
-    // private $_user = false;
-
 
     /**
      * @return array the validation rules.
@@ -39,8 +32,7 @@ class RegisterForm extends Model
 
 
     /**
-     * Logs in a user using the provided username and password.
-     * @return bool whether the user is logged in successfully
+     * Регистрация
      */
     public function register()
     {
@@ -56,7 +48,7 @@ class RegisterForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
 
-        // Чекаем валидацию модели (в основном для отлова не уникальности почты)
+        // Чекаем валидацию модели (в основном для отлова не уникальности почты в БД)
         if(!$user->validate()){
             Yii::$app->response->statusCode = 418;            
             return $user->errors;

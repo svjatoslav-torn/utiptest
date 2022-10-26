@@ -8,18 +8,11 @@ use Yii;
 
 class User extends ActiveRecord implements IdentityInterface
 {
-    /**
-     *  @return string
-     */
     public static function tableName()
     {
         return 'users';
     }
 
-    /**
-     *  Validation rules for RegisterForm
-     *  @return array
-     */
     public function rules()
     {
         return [
@@ -73,9 +66,6 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->authKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAuthKey($authKey)
     {
         return $this->authKey === $authKey;
@@ -91,12 +81,8 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
-
     /**
      * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
      */
     public function validatePassword($password)
     {

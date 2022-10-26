@@ -6,9 +6,18 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\filters\AccessControl;
 
+/**
+ * Ресурсный  контроллер  Коментариев
+ */
 class CommentController extends ActiveController
 {    
     public $modelClass = Comment::class;
+
+    public function beforeAction($action) 
+    { 
+        $this->enableCsrfValidation = false; 
+        return parent::beforeAction($action); 
+    }
 
     public function behaviors()
     {

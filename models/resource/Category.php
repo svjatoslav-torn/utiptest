@@ -4,8 +4,6 @@ namespace app\models\resource;
 
 use app\models\Category as ModelsCategory;
 use app\models\resource\Post;
-// use app\models\Post;
-
 
 class Category extends ModelsCategory
 {

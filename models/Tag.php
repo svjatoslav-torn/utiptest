@@ -15,9 +15,6 @@ use app\models\Post;
  */
 class Tag extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'tags';
@@ -28,10 +25,6 @@ class Tag extends \yii\db\ActiveRecord
         return ['posts'];
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -41,9 +34,6 @@ class Tag extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

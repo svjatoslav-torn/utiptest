@@ -4,23 +4,28 @@ namespace app\controllers\api\v1;
 use app\models\forms\PostForm;
 use Yii;
 use app\models\resource\Post;
-use app\models\search\PostSearch;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
-use yii\data\ActiveDataProvider;
 use yii\base\DynamicModel;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 
+/**
+ * Ресурсный контроллер Постов
+ */
 class PostController extends ActiveController
 {
     public $modelClass = Post::class;
+
+    public function beforeAction($action) 
+    { 
+        $this->enableCsrfValidation = false; 
+        return parent::beforeAction($action); 
+    }
 
     public function behaviors()
     {
         $behaviors = parent::behaviors();
 
-        // Auth all action methods
         $behaviors['authenticator']['authMethods'] = [
             HttpBearerAuth::class,
         ];
@@ -44,11 +49,13 @@ class PostController extends ActiveController
         return $behaviors;
     }
 
+    /**
+     * Переопределение действий
+     */
     public function actions()
     {
         $actions = parent::actions();
 
-        // Удаляем для переопределения
         unset($actions['options'], $actions['create'], $actions['update']);
 
         $actions['index']['dataFilter'] = [
@@ -61,6 +68,11 @@ class PostController extends ActiveController
         return $actions;
     }
 
+    /**
+     * Экшен отдает КЭШ всех постов. Кэш храниться 2 часа
+     * КЭШ решил реализовать тут чтобы показать что хоть что то об этом знаю,
+     * так как хз как это сделать в rest/activecontroller - не переопределять ведь теперь все))
+     */
     public function actionPostCache()
     {
         if($postList = \Yii::$app->cache->get('cache_all_postList')){
@@ -71,6 +83,9 @@ class PostController extends ActiveController
         return $post;
     }
 
+    /**
+     * Создание Поста
+     */
     public function actionCreate()
     {        
         $formPost = $this->workWithForm();
@@ -80,7 +95,7 @@ class PostController extends ActiveController
             return $formPost;
         }
 
-        // Cooking data
+        // Готови данные
         $modelPost = $formPost->cookingBeforeSave();
         
         // Model validation and save()
@@ -113,6 +128,9 @@ class PostController extends ActiveController
         }
     }
 
+    /**
+     * Редактирование Поста
+     */
     public function actionUpdate(int $id)
     {
         // Пишем в лог бодипарамс при попытке апдейта Поста на дев окружении
@@ -155,6 +173,7 @@ class PostController extends ActiveController
         }
     }
 
+    // Попытка борьбы с копипастой)
     private function workWithForm(){
         $formPost = new PostForm();
         $formPost->load(Yii::$app->request->bodyParams, '');

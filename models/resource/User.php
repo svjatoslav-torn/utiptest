@@ -5,9 +5,6 @@ namespace app\models\resource;
 use app\models\resource\Post;
 use app\models\User as ModelsUser;
 
-// use app\models\Post;
-
-
 class User extends ModelsUser
 {
     public function fields()
@@ -20,6 +17,7 @@ class User extends ModelsUser
         return ['posts'];
     }
 
+    // Получить посты юзера
     public function getPosts()
     {
         return $this->hasMany(Post::class, ['user_id' => 'id']);

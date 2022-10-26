@@ -14,18 +14,13 @@ use Yii;
  */
 class Category extends \yii\db\ActiveRecord
 {
-    
-
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'categories';
     }
 
     /**
-     * {@inheritdoc}
+     * Правила валидации
      */
     public function rules()
     {
@@ -36,7 +31,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * ИМенование атрибутов
      */
     public function attributeLabels()
     {
@@ -47,7 +42,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Posts]].
+     * Получить все посты категории
      *
      * @return \yii\db\ActiveQuery
      */

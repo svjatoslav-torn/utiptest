@@ -28,30 +28,27 @@ class Post extends ModelsPost
         return ['comments', 'category', 'author', 'tags'];
     }
 
+    // Получить комменты поста
     public function getComments()
     {
         return $this->hasMany(Comment::class, ['post_id' => 'id']);
     }
-
+    
+    // Получить категорию поста
     public function getCategory()
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
-
+    
+    // Получить Автора поста
     public function getAuthor()
     {
         return $this->hasOne(User::class, ['id' => 'author_id']);
     }
-
+    
+    // Получить Теги поста
     public function getTags()
     {
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])->viaTable('posts_tags', ['post_id' => 'id']);
     }
-
-    // public function getTags()
-    // {
-    //     return $this->hasMany(Tag::class, ['id' => 'post_id'])
-    //         ->viaTable('posts_tags', ['tag_id' => 'id']);
-    // }
-
 }

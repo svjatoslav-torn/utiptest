@@ -5,9 +5,18 @@ use app\models\resource\Category;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 
+/**
+ * Ресурсный контроллер Категорий
+ */
 class CategoryController extends ActiveController
 {    
     public $modelClass = Category::class;
+
+    public function beforeAction($action) 
+    { 
+        $this->enableCsrfValidation = false; 
+        return parent::beforeAction($action); 
+    }
 
     public function behaviors()
     {
@@ -39,7 +48,6 @@ class CategoryController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-
         unset($actions['options']);
         return $actions;
     }

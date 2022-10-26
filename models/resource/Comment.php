@@ -3,9 +3,7 @@
 namespace app\models\resource;
 
 use app\models\Comment as ModelsComment;
-use app\models\User;
-// use app\models\Post;
-
+use app\models\resource\User;
 
 class Comment extends ModelsComment
 {
@@ -20,9 +18,7 @@ class Comment extends ModelsComment
     }
 
     /**
-     * Gets query for [[Post]].
-     *
-     * @return \yii\db\ActiveQuery
+     * Получить пост коммента
      */
     public function getPost()
     {
@@ -30,9 +26,7 @@ class Comment extends ModelsComment
     }
 
     /**
-     * Gets query for [[User]].
-     *
-     * @return \yii\db\ActiveQuery
+     * Получить юзера коммента из ресурса
      */
     public function getUser()
     {

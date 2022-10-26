@@ -24,18 +24,13 @@ use app\models\Tag;
  */
 class Post extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'posts';
     }
 
-    
-
     /**
-     * {@inheritdoc}
+     * Правила валидации
      */
     public function rules()
     {
@@ -53,7 +48,7 @@ class Post extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * Именование атрибутов
      */
     public function attributeLabels()
     {
@@ -78,6 +73,9 @@ class Post extends \yii\db\ActiveRecord
         return new PostQuery(get_called_class());
     }
 
+    /**
+     * Получение поста по ID
+     */
     public static function findPost($id)
     {
         return static::findOne(['id' => $id]);
@@ -114,7 +112,7 @@ class Post extends \yii\db\ActiveRecord
     }
 
     /**
-     *
+     * Получаем теги
      * @return \yii\db\ActiveQuery
      */
     public function getTags()

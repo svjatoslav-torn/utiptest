@@ -6,9 +6,18 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\filters\AccessControl;
 
+/**
+ * Ресурсный контроллер Тегов
+ */
 class TagController extends ActiveController
 {    
     public $modelClass = Tag::class;
+
+    public function beforeAction($action) 
+    { 
+        $this->enableCsrfValidation = false; 
+        return parent::beforeAction($action); 
+    }
 
     public function behaviors()
     {
@@ -40,7 +49,6 @@ class TagController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-
         unset($actions['options']);
         return $actions;
     }

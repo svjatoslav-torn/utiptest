@@ -1,10 +1,4 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
-
 namespace app\commands;
 
 use app\models\resource\Category;
@@ -13,18 +7,13 @@ use app\models\resource\Post;
 use app\models\Tag;
 use app\models\User;
 use yii\console\Controller;
-use yii\console\ExitCode;
 
 /**
- * This command echoes the first argument that you have entered.
- *
- * This command is provided as an example for you to learn how to create console commands.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * Консольный контроллер. Посев данных в таблицы.
  */
 class SeederController extends Controller
 {
+    // Индексный. Базовый посев
     public function actionIndex()
     {
         $this->actionUsers();
@@ -33,6 +22,7 @@ class SeederController extends Controller
         $this->actionPosts();
         $this->actionComments();
 
+        // Вывод справки
         echo PHP_EOL;
         echo PHP_EOL;
         echo '/////   СПРАВКА    /////';
@@ -57,8 +47,8 @@ class SeederController extends Controller
 
     /**
      * Посев данных в категории, по умолчанию 5шт если не задано иное
-     * @param string $message the message to be echoed.
-     * @return string
+     * @param string $count
+     * @return void
      */
     public function actionCategories(int $count = 5)
     {
@@ -78,8 +68,8 @@ class SeederController extends Controller
 
     /**
      * Посев данных в юзеров, по умолчанию 2шт если не задано иное
-     * @param string $message the message to be echoed.
-     * @return string
+     * @param string $count
+     * @return void
      */
     public function actionUsers(int $count = 2)
     {
@@ -107,8 +97,8 @@ class SeederController extends Controller
 
     /**
      * Посев данных в посты, по умолчанию 20шт если не задано иное
-     * @param string $message the message to be echoed.
-     * @return string
+     * @param string $count
+     * @return void
      */
     public function actionPosts(int $count = 20)
     {
@@ -116,7 +106,6 @@ class SeederController extends Controller
 
         $categories = Category::find()->limit(5)->asArray()->all();
         $users = User::find()->limit(4)->asArray()->all();
-        // var_dump(array_rand($users, 1));die;
         
         for ( $i = 0; $i < $count; $i++ )
         {
@@ -137,8 +126,8 @@ class SeederController extends Controller
 
     /**
      * Посев комментариев к постам, по умолчанию 100шт если не задано иное
-     * @param string $message the message to be echoed.
-     * @return string
+     * @param string $count
+     * @return void
      */
     public function actionComments(int $count = 100)
     {
@@ -164,8 +153,8 @@ class SeederController extends Controller
 
     /**
      * Посев тегов к постам, по умолчанию 10шт если не задано иное
-     * @param string $message the message to be echoed.
-     * @return string
+     * @param string $count
+     * @return void
      */
     public function actionTags(int $count = 10)
     {

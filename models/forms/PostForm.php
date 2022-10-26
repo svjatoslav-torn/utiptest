@@ -2,26 +2,20 @@
 
 namespace app\models\forms;
 
-use app\models\Token;
 use Yii;
 use yii\base\Model;
 use app\models\User;
 use app\models\Post;
-// use yii\imagine\Image;
-use Imagine\Imagick\Imagine;
 
 /**
- * LoginForm is the model behind the login form.
- *
- * @property-read User|null $user
- *
+ * Форма для данных поста
  */
 class PostForm extends Model
 {
     public $title;
     public $body;
     public $status = 0;
-    public $img_base64 = null;
+    public $img_base64 = null; //Сюда передаем с фронта mime base64
     public $category_id;
     public $tags = '';
 
@@ -44,7 +38,6 @@ class PostForm extends Model
 
     public function cookingBeforeSave(Post $modelPost = null)
     {
-        // var_dump($this->tags);die;
         $modelPost = $modelPost ?? new Post();
 
         $modelPost->title = $this->title;
@@ -70,7 +63,7 @@ class PostForm extends Model
      */
     public function getImagePath(?string $currentPath)
     {
-        // Типа проверка - такая себе)))
+        // Типа проверка - такая себе конечно )))
         if(!strpos($this->img_base64, 'base64')){
             if($currentPath){
                 return $currentPath;

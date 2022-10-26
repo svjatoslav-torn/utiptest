@@ -46,7 +46,6 @@ $config = [
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
-            // send all mails to a file by default.
             'useFileTransport' => true,
         ],
         'log' => [
@@ -56,6 +55,7 @@ $config = [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                // Логи с дева
                 [
                     'class' => 'yii\log\FileTarget', 
                     'categories' => ['dev_updatePost_log'], 

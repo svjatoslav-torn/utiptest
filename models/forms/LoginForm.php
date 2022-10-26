@@ -3,15 +3,11 @@
 namespace app\models\forms;
 
 use app\models\Token;
-use Yii;
 use yii\base\Model;
 use app\models\User;
 
 /**
- * LoginForm is the model behind the login form.
- *
- * @property-read User|null $user
- *
+ * Форма для данных при логине пользователя.
  */
 class LoginForm extends Model
 {
@@ -54,8 +50,7 @@ class LoginForm extends Model
     }
 
     /**
-     * Logs in a user using the provided username and password.
-     * @return bool whether the user is logged in successfully
+     * Аутентификация
      */
     public function auth()
     {
