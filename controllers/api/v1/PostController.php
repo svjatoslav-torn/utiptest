@@ -102,7 +102,7 @@ class PostController extends ActiveController
         if($modelPost->validate()){
             if($modelPost->save()){
                 //Не понял как сохранять в связанную таблицу. Привет велосипед)
-                if(count($tags = explode('|', $formPost->tags)) > 0){
+                if(count($tags = explode('|', $formPost->tags)) > 1){
                     for ($i=0; $i < count($tags); $i++) { 
                         \Yii::$app->db->createCommand("INSERT INTO `posts_tags` (`post_id`, `tag_id`) VALUES ('{$modelPost->id}', '{$tags[$i]}')")
                             ->queryAll();
