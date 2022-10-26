@@ -32,6 +32,8 @@ class Post extends \yii\db\ActiveRecord
         return 'posts';
     }
 
+    
+
     /**
      * {@inheritdoc}
      */
@@ -65,6 +67,15 @@ class Post extends \yii\db\ActiveRecord
             'status' => 'Статус',
             'created_at' => 'Дата создания',
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return PostQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new PostQuery(get_called_class());
     }
 
     public static function findPost($id)

@@ -14,10 +14,8 @@ use Yii;
  */
 class Category extends \yii\db\ActiveRecord
 {
-    public function fields()
-    {
-        return ['id', 'name'];
-    }
+    
+
     /**
      * {@inheritdoc}
      */

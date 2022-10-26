@@ -7,6 +7,8 @@ use Yii;
 use yii\base\Model;
 use app\models\User;
 use app\models\Post;
+// use yii\imagine\Image;
+use Imagine\Imagick\Imagine;
 
 /**
  * LoginForm is the model behind the login form.
@@ -19,7 +21,7 @@ class PostForm extends Model
     public $title;
     public $body;
     public $status = 0;
-    // public $img_path;
+    public $img_base64 = null;
     public $category_id;
 
 
@@ -34,7 +36,7 @@ class PostForm extends Model
             ['category_id', 'required', 'message' => 'Передайте идентификатор категории'],
             ['title', 'string', 'max' => 255],
             ['status', 'boolean'],
-            // ['img_', 'validatePassword'],
+            ['img_base64', 'string'],
         ];
     }
 
@@ -65,12 +67,43 @@ class PostForm extends Model
         $modelPost->body = $this->body;
         $modelPost->status = $this->status;
         $modelPost->category_id = $this->category_id;
+
+        if($this->img_base64){
+            $modelPost->img_path =  $this->getImagePath($modelPost->img_path);
+        }
         
         if($modelPost->isNewRecord){ // Только если новая запись
             $modelPost->author_id = Yii::$app->user->identity->id;
         }
         
         return $modelPost;
+    }
+
+    /**
+     *  Check format base64, save image, return part of url or full url
+     *
+     *  @return string
+     */
+    public function getImagePath(?string $currentPath)
+    {
+        // Типа проверка - такая себе)))
+        if(!strpos($this->img_base64, 'base64')){
+            if($currentPath){
+                return $currentPath;
+            }
+            return null;
+        }
+
+        $pattern = '/data:image\/(.+);base64,(.*)/';
+        preg_match($pattern, $this->img_base64, $matches);
+
+        $path = 'i/post/' . Yii::$app->security->generateRandomString(20) . "." . $matches[1];
+
+        if(file_put_contents($path, base64_decode($matches[2]))){
+            return $path;
+        }
+        return $currentPath;
+
     }
 
 }

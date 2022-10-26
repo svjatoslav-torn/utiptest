@@ -64,7 +64,12 @@ class RegisterForm extends Model
 
         
         if($user->save()){
-            Yii::$app->response->statusCode = 201;            
+            Yii::$app->response->statusCode = 201;  
+
+            $authManager = Yii::$app->getAuthManager();
+            $role = $authManager->getRole('user');
+            $authManager->assign($role, $user->id);  
+                    
             return [
                 'id' => $user->id,
                 'name' => $user->name,

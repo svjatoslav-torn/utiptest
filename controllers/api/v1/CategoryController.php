@@ -1,7 +1,7 @@
 <?php
 namespace app\controllers\api\v1;
 
-use app\models\Category;
+use app\models\resource\Category;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 

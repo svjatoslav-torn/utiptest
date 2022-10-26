@@ -3,10 +3,14 @@ namespace app\controllers\api\v1;
 
 use app\models\forms\PostForm;
 use Yii;
-use app\models\Post;
+use app\models\resource\Post;
+use app\models\search\PostSearch;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
+use yii\base\DynamicModel;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class PostController extends ActiveController
 {
@@ -16,9 +20,26 @@ class PostController extends ActiveController
     {
         $behaviors = parent::behaviors();
 
+        // Auth all action methods
         $behaviors['authenticator']['authMethods'] = [
             HttpBearerAuth::class,
         ];
+
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'post-cache'],
+                        'roles' => ['user'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ];
 
         return $behaviors;
     }
@@ -27,9 +48,27 @@ class PostController extends ActiveController
     {
         $actions = parent::actions();
 
+        // Удаляем для переопределения
         unset($actions['options'], $actions['create'], $actions['update']);
-        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+
+        $actions['index']['dataFilter'] = [
+            'class' => \yii\data\ActiveDataFilter::class,
+            'searchModel' => (new DynamicModel(['author_id', 'status']))
+                        ->addRule(['author_id'], 'integer')
+                        ->addRule(['status'], 'boolean'),
+        ];
+
         return $actions;
+    }
+
+    public function actionPostCache()
+    {
+        if($postList = \Yii::$app->cache->get('cache_all_postList')){
+            $post = Post::find()->asArray()->all();
+            \Yii::$app->cache->set('cache_all_postList', $postList, 60 * 60 * 2); //Кэш запроса
+        }
+        Yii::$app->response->statusCode = 200;
+        return $post;
     }
 
     public function actionCreate()
@@ -110,24 +149,11 @@ class PostController extends ActiveController
 
         // Form validation
         if(! $formPost->validate()){
-        
             return $formPost->errors;
         }
 
         return $formPost;
     }
 
-    public function prepareDataProvider($data)
-    {   
-// var_dump($data->pagination);die;
-        $query = [$this->modelClass, 'find'];
-            return new ActiveDataProvider([
-                'query' => $query(),
-                'pagination' => [
-                    'pageSize' => Yii::$app->request->post('per-page'),
-                    // 'offset' => Yii::$app->request->post('offset'),
-                ],
-            ]);
-        // return 'hello';
-    }
+    
 }
