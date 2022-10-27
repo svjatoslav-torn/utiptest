@@ -14,7 +14,7 @@ class Comment extends ModelsComment
 
     public function extraFields()
     {
-        return ['post'];
+        return ['post', 'user'];
     }
 
     /**

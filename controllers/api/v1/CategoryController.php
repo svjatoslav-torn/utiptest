@@ -4,6 +4,7 @@ namespace app\controllers\api\v1;
 use app\models\resource\Category;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
+use yii\filters\AccessControl;
 
 /**
  * Ресурсный контроллер Категорий
