@@ -3,9 +3,12 @@
 Разрабатывал на windows - OpenServer
 php 8.1 mysql nginx 1.21
 
-Инструция рабочая, проверил два раза :)
+Инструкция рабочая, проверил два раза :)
 
-1. git clone  repname
+Список реализованного функционала
+https://disk.yandex.ru/d/jvayrho1T8RB4g
+
+1. git clone https://github.com/svjatoslav-torn/utiptest.git или https://github.com/svjatoslav-torn/utiptest.git .
 2. composer update
 3. Создайте БД
 4. Настройте подключение к БД в /config/web.php
@@ -28,6 +31,6 @@ php 8.1 mysql nginx 1.21
 
 Опционально: php yii roles/revoke - удалить роль. php yii roles/assign - добавить роль
 
-http://hostname/auth/register  -  доступна регистрация обычного пользователя. Поля: string $name, string $email, string $password
 
+http://hostname/auth/register  -  доступна регистрация обычного пользователя. Поля: string $name, string $email, string $password
 http://hostname/authlogin  -  получение Bearer токена. Поля: string $email, string $password
