@@ -1,30 +1,44 @@
 <?php
 namespace app\commands;
 
-use yii\console\Controller;
 use Yii;
+use yii\console\Controller;
 use yii\helpers\ArrayHelper;
-use app\models\User;
 use yii\console\Exception;
+use app\models\User;
 
 /**
- *  Управление назначением и удалением ролей у пользователя
+ * Управление назначением и удалением ролей у пользователя
+ * 
+ * @package app\commands
+ * @since 1.0.0.0
  */
 class RolesController extends Controller
 {
-    // Присвоение роли юзеру
+    /**
+     * Метод для присвоение роли пользователю
+     * 
+     * @return void
+     */
     public function actionAssign()
     {
         $email = $this->prompt('Email:', ['required' => true]);
         $user = $this->findModel($email);
-        $roleName = $this->select('Роль:', ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'description'));
+        $roleName = $this->select(
+            'Роль:',
+            ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'description')
+        );
         $authManager = Yii::$app->getAuthManager();
         $role = $authManager->getRole($roleName);
         $authManager->assign($role, $user->id);
         $this->stdout('Отлично!' . PHP_EOL);
     }
  
-    /// Удаление роли у юзера
+    /**
+     * Метод удаление роли у пользователя
+     * 
+     * @return void
+     */
     public function actionRevoke()
     {
         $email = $this->prompt('Email:', ['required' => true]);

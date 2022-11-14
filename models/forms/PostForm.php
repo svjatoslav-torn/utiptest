@@ -1,29 +1,36 @@
 <?php
-
 namespace app\models\forms;
 
 use Yii;
 use yii\base\Model;
-use app\models\User;
 use app\models\Post;
 
 /**
  * Форма для данных поста
+ * 
+ * @property string $title
+ * @property string $body
+ * @property bool|int $status
+ * @property string|null $img_base64
+ * @property int $category_id
+ * @property string $tags
+ * 
+ * @package app\models\forms
+ * @since 1.0.0.0
  */
 class PostForm extends Model
 {
-    public $title;
+    public string $title;
     public $body;
     public $status = 0;
     public $img_base64 = null; //Сюда передаем с фронта mime base64
     public $category_id;
     public $tags = '';
 
-
     /**
-     * @return array the validation rules.
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             ['title', 'required', 'message' => 'В теле запроса нет Заголовка поста'],
@@ -36,6 +43,11 @@ class PostForm extends Model
         ];
     }
 
+    /**
+     * @param Post|null $modelPost
+     * 
+     * @return Post
+     */
     public function cookingBeforeSave(Post $modelPost = null)
     {
         $modelPost = $modelPost ?? new Post();
@@ -45,11 +57,11 @@ class PostForm extends Model
         $modelPost->status = $this->status;
         $modelPost->category_id = $this->category_id;
 
-        if($this->img_base64){
-            $modelPost->img_path =  $this->getImagePath($modelPost->img_path);
+        if ($this->img_base64) {
+            $modelPost->img_path = $this->getImagePath($modelPost->img_path);
         }
         
-        if($modelPost->isNewRecord){ // Только если новая запись
+        if ($modelPost->isNewRecord) {
             $modelPost->author_id = Yii::$app->user->identity->id;
         }
         
@@ -58,14 +70,14 @@ class PostForm extends Model
 
     /**
      *  Check format base64, save image, return part of url or full url
-     *
-     *  @return string
+     * @param string|null $currentPath
+     * 
+     * @return string
      */
-    public function getImagePath(?string $currentPath)
+    public function getImagePath(string|null $currentPath): string
     {
-        // Типа проверка - такая себе конечно )))
-        if(!strpos($this->img_base64, 'base64')){
-            if($currentPath){
+        if (!strpos($this->img_base64, 'base64')) {
+            if ($currentPath) {
                 return $currentPath;
             }
             return null;
@@ -76,11 +88,10 @@ class PostForm extends Model
 
         $path = 'i/post/' . Yii::$app->security->generateRandomString(20) . "." . $matches[1];
 
-        if(file_put_contents($path, base64_decode($matches[2]))){
+        if (file_put_contents($path, base64_decode($matches[2]))) {
             return $path;
         }
+        
         return $currentPath;
-
     }
-
 }

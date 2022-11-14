@@ -1,5 +1,4 @@
 <?php
-
 namespace app\models;
 
 use Yii;
@@ -25,6 +24,8 @@ class Comment extends \yii\db\ActiveRecord
 
     /**
      * Правила валидации
+     * 
+     * @return array
      */
     public function rules()
     {
@@ -40,6 +41,8 @@ class Comment extends \yii\db\ActiveRecord
 
     /**
      * Именование атрибутов
+     * 
+     * @return array
      */
     public function attributeLabels()
     {

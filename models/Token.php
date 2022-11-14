@@ -9,17 +9,18 @@ use Yii;
  * @property integer $user_id
  * @property integer $expired_at
  * @property string $token
- * 
  */
 class Token extends \yii\db\ActiveRecord
 {
-
-    public static function tableName()
+    /**
+     * @return string
+     */
+    public static function tableName(): string
     {
         return 'token';
     }
 
-    public function generateToken($expire)
+    public function generateToken($expire): void
     {
         $this->expired_at = $expire;
         $this->token = Yii::$app->security->generateRandomString(40);

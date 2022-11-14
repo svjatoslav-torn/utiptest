@@ -1,5 +1,4 @@
 <?php
-
 namespace app\controllers;
 
 use Yii;
@@ -9,6 +8,12 @@ use yii\filters\VerbFilter;
 use app\models\forms\LoginForm;
 use app\models\forms\RegisterForm;
 
+/**
+ * Класс для авторизации и регистрации пользователей
+ * 
+ * @package app\controllers
+ * @since 1.0.0.0
+ */
 class AuthController extends Controller
 {
     public function behaviors()
@@ -20,13 +25,12 @@ class AuthController extends Controller
                     'register' => ['post'],
                     'login' => ['post'],
                 ],
-            ],            
+            ],
         ];
     }
 
-
     public function beforeAction($action) 
-    { 
+    {
         $this->enableCsrfValidation = false; 
         return parent::beforeAction($action); 
     }
@@ -41,7 +45,7 @@ class AuthController extends Controller
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $form = new RegisterForm();
         $form->load(Yii::$app->request->post(), '');
-        return $form->register();   
+        return $form->register();
     }
 
     /**
@@ -56,19 +60,19 @@ class AuthController extends Controller
         $loginForm = new LoginForm();
         $loginForm->load(Yii::$app->request->bodyParams, '');
 
-        if(!$loginForm->validate()){
+        if (!$loginForm->validate()) {
             Yii::$app->response->statusCode = 400;
             return $loginForm->errors; 
         }
 
-        if($token = $loginForm->auth()){
+        if ($token = $loginForm->auth()) {
             return [
                 'token' => $token->token,
                 'expired' => date(DATE_RFC3339, $token->expired_at),
                 'user_id' => $loginForm->getUser()->id,
             ];
-        }else{
-            return $loginForm; // выкинет ерорс если не удача
+        } else {
+            return $loginForm;
         }
     }
 }

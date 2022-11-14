@@ -1,10 +1,15 @@
 <?php
-
 namespace app\models\resource;
 
 use app\models\Comment as ModelsComment;
 use app\models\resource\User;
 
+/**
+ * Recource model for Comment model
+ * 
+ * @package app\models\resource
+ * @since 1.0.0.0
+ */
 class Comment extends ModelsComment
 {
     public function fields()
@@ -19,6 +24,8 @@ class Comment extends ModelsComment
 
     /**
      * Получить пост коммента
+     * 
+     * @return Post
      */
     public function getPost()
     {
@@ -27,6 +34,8 @@ class Comment extends ModelsComment
 
     /**
      * Получить юзера коммента из ресурса
+     * 
+     * @return Post
      */
     public function getUser()
     {

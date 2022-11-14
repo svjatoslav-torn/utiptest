@@ -1,22 +1,27 @@
 <?php
 namespace app\controllers\api\v1;
 
-use app\models\resource\Category;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\filters\AccessControl;
+use app\models\resource\Category;
 
 /**
  * Ресурсный контроллер Категорий
+ * 
+ * @property Category $modelClass
+ * 
+ * @package app\controllers\api\v1
+ * @since 1.0.0.0
  */
 class CategoryController extends ActiveController
-{    
+{
     public $modelClass = Category::class;
 
-    public function beforeAction($action) 
-    { 
-        $this->enableCsrfValidation = false; 
-        return parent::beforeAction($action); 
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
     }
 
     public function behaviors()
@@ -52,5 +57,4 @@ class CategoryController extends ActiveController
         unset($actions['options']);
         return $actions;
     }
-    
 }

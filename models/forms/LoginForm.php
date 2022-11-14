@@ -1,13 +1,18 @@
 <?php
-
 namespace app\models\forms;
 
-use app\models\Token;
 use yii\base\Model;
+use app\models\Token;
 use app\models\User;
 
 /**
  * Форма для данных при логине пользователя.
+ * 
+ * @property string $email
+ * @property string $password
+ * 
+ * @package app\models\forms
+ * @since 1.0.0.0
  */
 class LoginForm extends Model
 {
@@ -16,9 +21,8 @@ class LoginForm extends Model
 
     private $_user = false;
 
-
     /**
-     * @return array the validation rules.
+     * @return array
      */
     public function rules()
     {
@@ -35,28 +39,32 @@ class LoginForm extends Model
      * This method serves as the inline validation for password.
      *
      * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    public function validatePassword($attribute)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
             //Проверять хешированный пароль - готово
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Не верный логин или пароль. Проверьте учетные данные!');
+                $this->addError(
+                    $attribute,
+                    'Не верный логин или пароль. Проверьте учетные данные!'
+                );
             }
         }
     }
 
     /**
      * Аутентификация
+     * 
+     * @return Token|null
      */
-    public function auth()
+    public function auth(): Token|null
     {
         $token = new Token();
         $token->user_id = $this->getUser()->id;
-        $token->generateToken( time() + 3600 * 24 );
+        $token->generateToken(time() + 3600 * 24);
 
         return $token->save() ? $token : null;
     }

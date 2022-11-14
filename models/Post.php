@@ -24,15 +24,20 @@ use app\models\Tag;
  */
 class Post extends \yii\db\ActiveRecord
 {
-    public static function tableName()
+    /**
+     * @return string
+     */
+    public static function tableName(): string
     {
         return 'posts';
     }
 
     /**
      * Правила валидации
+     * 
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             ['category_id', 'required', 'message' => 'Вы не передали идентификатор категории'],
@@ -49,8 +54,10 @@ class Post extends \yii\db\ActiveRecord
 
     /**
      * Именование атрибутов
+     * 
+     * @return array
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',

@@ -1,16 +1,21 @@
 <?php
 namespace app\controllers\api\v1;
 
-use app\models\forms\PostForm;
 use Yii;
-use app\models\resource\Post;
-use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\base\DynamicModel;
+use yii\filters\auth\HttpBearerAuth;
 use yii\filters\AccessControl;
+use app\models\forms\PostForm;
+use app\models\resource\Post;
 
 /**
  * Ресурсный контроллер Постов
+ * 
+ * @property Post $modelClass
+ * 
+ * @package app\controllers\api\v1
+ * @since 1.0.0.0
  */
 class PostController extends ActiveController
 {
@@ -61,8 +66,8 @@ class PostController extends ActiveController
         $actions['index']['dataFilter'] = [
             'class' => \yii\data\ActiveDataFilter::class,
             'searchModel' => (new DynamicModel(['author_id', 'status']))
-                        ->addRule(['author_id'], 'integer')
-                        ->addRule(['status'], 'boolean'),
+                ->addRule(['author_id'], 'integer')
+                ->addRule(['status'], 'boolean'),
         ];
 
         return $actions;
@@ -72,70 +77,78 @@ class PostController extends ActiveController
      * Экшен отдает КЭШ всех постов. Кэш храниться 2 часа
      * КЭШ решил реализовать тут чтобы показать что хоть что то об этом знаю,
      * так как хз как это сделать в rest/activecontroller - не переопределять ведь теперь все))
+     * 
+     * @return yii\web\Response
      */
     public function actionPostCache()
     {
-        if(! $postList = \Yii::$app->cache->get('cache_all_postListeg')){
+        if (! $postList = \Yii::$app->cache->get('cache_all_postList')) {
             $postList = Post::find()->asArray()->all();
-            \Yii::$app->cache->set('cache_all_postListeg', $postList, 60 * 60 * 2); //Кэш запроса
+            \Yii::$app->cache->set('cache_all_postList', $postList, 60 * 60 * 2);
         }
-        
+
         Yii::$app->response->statusCode = 200;
         return $postList;
     }
 
     /**
      * Создание Поста
+     * 
+     * @return yii\web\Response
      */
     public function actionCreate()
-    {        
+    {
         $formPost = $this->workWithForm();
 
-        if(is_array($formPost)){
+        if (is_array($formPost)) {
             Yii::$app->response->statusCode = 400;
             return $formPost;
         }
 
-        // Готови данные
+        // Готовим данные
         $modelPost = $formPost->cookingBeforeSave();
-        
-        // Model validation and save()
-        if($modelPost->validate()){
-            if($modelPost->save()){
-                //Не понял как сохранять в связанную таблицу. Привет велосипед) Для обновления не делаю)
-                if(count($tags = explode('|', $formPost->tags)) > 0 && $tags[0] !== ''){
-                    for ($i=0; $i < count($tags); $i++) { 
-                        \Yii::$app->db->createCommand("INSERT INTO `posts_tags` (`post_id`, `tag_id`) VALUES ('{$modelPost->id}', '{$tags[$i]}')")
-                            ->queryAll();
-                    }
-                }
-                // save success - return id post
-                Yii::$app->response->statusCode = 201;
-                return [
-                    'id' => $modelPost->id,
-                ];
-            }else{
-                // don't save - why?
-                Yii::$app->response->statusCode = 500;
-                return [
-                    'message' => 'При сохранении поста произошла ошибка',
-                    'errors' => $modelPost->errors,
-                ];
-            }
-        }else{
-            // bad validated model
+
+        // Валидация не состоялась отправляем результат и 400 код
+        if (!$modelPost->validate()) {
             Yii::$app->response->statusCode = 400;
             return $modelPost;
         }
+
+        if (!$modelPost->save()) {
+            Yii::$app->response->statusCode = 500;
+            return [
+                'message' => 'При сохранении поста произошла ошибка',
+                'errors' => $modelPost->errors,
+            ];
+        }
+
+        if (
+            count($tags = explode('|', $formPost->tags)) > 0
+            && $tags[0] !== ''
+        ) {
+            for ($i=0; $i < count($tags); $i++) {
+                \Yii::$app->db->createCommand(
+                    "INSERT INTO `posts_tags` (`post_id`, `tag_id`) VALUES ('{$modelPost->id}', '{$tags[$i]}')"
+                )->queryAll();
+            }
+        }
+        // save success - return id post
+        Yii::$app->response->statusCode = 201;
+        return [
+            'id' => $modelPost->id,
+        ];
     }
 
     /**
      * Редактирование Поста
+     * 
+     * @param int $id
+     * 
+     * @return yii\web\Response
      */
     public function actionUpdate(int $id)
     {
-        // Пишем в лог бодипарамс при попытке апдейта Поста на дев окружении
-        if(YII_ENV !== 'prod'){
+        if (YII_ENV !== 'prod') {
             Yii::info(Yii::$app->request->bodyParams, 'dev_updatePost_log');
         }
 
@@ -143,35 +156,31 @@ class PostController extends ActiveController
 
         $formPost = $this->workWithForm();
 
-        if(is_array($formPost)){
+        if (is_array($formPost)) {
             Yii::$app->response->statusCode = 400;
             return $formPost;
         }
 
-        // Cooking data
         $modelPost = $formPost->cookingBeforeSave($modelPost);
 
-        // Model validation and save()
-        if($modelPost->validate()){
-            if($modelPost->save()){
-                // save success - return id post
-                Yii::$app->response->statusCode = 201;
-                return [
-                    'id' => $modelPost->id,
-                ];
-            }else{
-                // don't save - why?
-                Yii::$app->response->statusCode = 500;
-                return [
-                    'message' => 'При сохранении поста произошла ошибка',
-                    'errors' => $modelPost->errors,
-                ];
-            }
-        }else{
-            // bad validated model
+        if (!$modelPost->validate()) {
             Yii::$app->response->statusCode = 400;
             return $modelPost;
         }
+
+        if (!$modelPost->save()) {
+            Yii::$app->response->statusCode = 500;
+            return [
+                'message' => 'При сохранении поста произошла ошибка',
+                'errors' => $modelPost->errors,
+            ];
+        }
+
+        Yii::$app->response->statusCode = 201;
+        return [
+            'id' => $modelPost->id,
+        ];
+
     }
 
     // Попытка борьбы с копипастой)
@@ -179,13 +188,10 @@ class PostController extends ActiveController
         $formPost = new PostForm();
         $formPost->load(Yii::$app->request->bodyParams, '');
 
-        // Form validation
-        if(! $formPost->validate()){
+        if (!$formPost->validate()) {
             return $formPost->errors;
         }
 
         return $formPost;
     }
-
-    
 }

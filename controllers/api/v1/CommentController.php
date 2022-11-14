@@ -1,13 +1,18 @@
 <?php
 namespace app\controllers\api\v1;
 
-use app\models\resource\Comment;
-use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
+use yii\filters\auth\HttpBearerAuth;
 use yii\filters\AccessControl;
+use app\models\resource\Comment;
 
 /**
  * Ресурсный  контроллер  Коментариев
+ * 
+ * @property Comment $modelClass
+ * 
+ * @package app\controllers\api\v1
+ * @since 1.0.0.0
  */
 class CommentController extends ActiveController
 {    

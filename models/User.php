@@ -1,5 +1,4 @@
 <?php
-
 namespace app\models;
 
 use yii\db\ActiveRecord;
@@ -8,12 +7,15 @@ use Yii;
 
 class User extends ActiveRecord implements IdentityInterface
 {
-    public static function tableName()
+    /**
+     * @return string
+     */
+    public static function tableName(): string
     {
         return 'users';
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'email', 'password_hash'], 'required'],
@@ -35,6 +37,11 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      *  Ауф по токену, с помощью BearerAuth
+     * 
+     * @param string $token
+     * @param string|null $type
+     * 
+     * @return Token
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {

@@ -11,7 +11,7 @@ https://disk.yandex.ru/d/jvayrho1T8RB4g
 1. git clone https://github.com/svjatoslav-torn/utiptest.git или https://github.com/svjatoslav-torn/utiptest.git .
 2. composer update
 3. Создайте БД
-4. Настройте подключение к БД в /config/web.php
+4. Настройте подключение к БД в /config/db.php
 
 5. php yii migrate - накатить миграции
 
@@ -33,4 +33,4 @@ https://disk.yandex.ru/d/jvayrho1T8RB4g
 
 
 http://hostname/auth/register  -  доступна регистрация обычного пользователя. Поля: string $name, string $email, string $password
-http://hostname/authlogin  -  получение Bearer токена. Поля: string $email, string $password
+http://hostname/auth/login  -  получение Bearer токена. Поля: string $email, string $password

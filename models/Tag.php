@@ -1,9 +1,9 @@
 <?php
-
 namespace app\models;
 
 use Yii;
 use app\models\Post;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "tag".
@@ -15,26 +15,25 @@ use app\models\Post;
  */
 class Tag extends \yii\db\ActiveRecord
 {
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'tags';
     }
 
-    public function extraFields()
+    public function extraFields(): array
     {
         return ['posts'];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name'], 'required'],
             [['name'], 'string', 'max' => 30],
-            // [['id'], 'exist', 'skipOnError' => true, 'targetClass' => PostsTags::class, 'targetAttribute' => ['id' => 'tag_id']],
         ];
     }
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -46,7 +45,7 @@ class Tag extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPosts()
+    public function getPosts(): ActiveQuery
     {
         return $this->hasMany(Post::class, ['id' => 'post_id'])
             ->viaTable('posts_tags', ['tag_id' => 'id']);

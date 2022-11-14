@@ -1,24 +1,30 @@
 <?php
-
 namespace app\models\forms;
 
-use app\models\User;
 use Yii;
 use yii\base\Model;
+use app\models\User;
 
 /**
  * Форма для данных при регистрации
+ * 
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * 
+ * @package app\models\forms
+ * @since 1.0.0.0
  */
 class RegisterForm extends Model
 {
-    public $name;
-    public $email;
-    public $password;
+    public string $name;
+    public string $email;
+    public string $password;
 
     /**
-     * @return array the validation rules.
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             ['name', 'required', 'message' => 'Поле Имя обязательно для заполнения'],
@@ -30,15 +36,15 @@ class RegisterForm extends Model
         ];
     }
 
-
     /**
      * Регистрация
+     * 
+     * @return yii\web\Response
      */
     public function register()
     {
-        // Кидаем ошибку при провале валидации Формы
-        if (! $this->validate()) {
-            Yii::$app->response->statusCode = 400;            
+        if (!$this->validate()) {
+            Yii::$app->response->statusCode = 400;
             return $this->errors;
         }
 
@@ -49,25 +55,12 @@ class RegisterForm extends Model
         $user->generateAuthKey();
 
         // Чекаем валидацию модели (в основном для отлова не уникальности почты в БД)
-        if(!$user->validate()){
-            Yii::$app->response->statusCode = 418;            
+        if (!$user->validate()) {
+            Yii::$app->response->statusCode = 418;
             return $user->errors;
         }
 
-        
-        if($user->save()){
-            Yii::$app->response->statusCode = 201;  
-
-            $authManager = Yii::$app->getAuthManager();
-            $role = $authManager->getRole('user');
-            $authManager->assign($role, $user->id);  
-                    
-            return [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ];
-        }else{
+        if (!$user->save()) {
             Yii::$app->response->statusCode = 520;
             return [
                 'message' => 'По каким то неизвестным причинам сохранение не произошло',
@@ -75,6 +68,15 @@ class RegisterForm extends Model
             ];
         }
 
-    }
+        Yii::$app->response->statusCode = 201;
+        $authManager = Yii::$app->getAuthManager();
+        $role = $authManager->getRole('user');
+        $authManager->assign($role, $user->id);  
 
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ];
+    }
 }

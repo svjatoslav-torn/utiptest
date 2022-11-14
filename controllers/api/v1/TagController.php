@@ -1,16 +1,21 @@
 <?php
 namespace app\controllers\api\v1;
 
-use app\models\Tag;
-use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
+use yii\filters\auth\HttpBearerAuth;
 use yii\filters\AccessControl;
+use app\models\Tag;
 
 /**
  * Ресурсный контроллер Тегов
+ * 
+ * @property Tag $modelClass
+ * 
+ * @package app\controllers\api\v1
+ * @since 1.0.0.0
  */
 class TagController extends ActiveController
-{    
+{
     public $modelClass = Tag::class;
 
     public function beforeAction($action) 
@@ -52,5 +57,4 @@ class TagController extends ActiveController
         unset($actions['options']);
         return $actions;
     }
-    
 }

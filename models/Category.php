@@ -1,5 +1,4 @@
 <?php
-
 namespace app\models;
 
 use Yii;
@@ -14,15 +13,17 @@ use Yii;
  */
 class Category extends \yii\db\ActiveRecord
 {
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'categories';
     }
 
     /**
      * Правила валидации
+     * 
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name'], 'required', 'message' => 'Отсутствует поле Название'],
@@ -32,8 +33,10 @@ class Category extends \yii\db\ActiveRecord
 
     /**
      * ИМенование атрибутов
+     * 
+     * @return array
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
